@@ -1,2 +1,0 @@
-fetch("https://restcountries.com/v3.1/name/Ukraine").then((function(o){return o.json()})).then((function(o){console.log("All information:",o[0]),console.log("Country named as",o[0].name.official),console.log("The capital is",o[0].capital[0]),console.log("Population is ",o[0].population,"peoples"),console.log("Country language is",o[0].languages),console.log("Country Flag is",o[0].flags.svg)}));
-//# sourceMappingURL=index.f180b413.js.map
