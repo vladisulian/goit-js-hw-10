@@ -11,8 +11,10 @@ function fetchCountries(name) {
     })
     .then(data => {
       console.log('All information:', data[0]);
-      console.log('The capital is ', data[0].capital);
+      console.log('Country named as', data[0].name.official);
+      console.log('The capital is', data[0].capital[0]);
       console.log('Population is ', data[0].population, 'peoples');
       console.log('Country language is', data[0].languages);
+      console.log('Country Flag is', data[0].flags.svg);
     });
 }
