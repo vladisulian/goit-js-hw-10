@@ -43,9 +43,11 @@ function renderCountryList(countries) {
 function renderOneCountry(countries) {
   const markup = countries
     .map(country => {
-      return `<li style="list-style-type: none"><img style="margin-right: 5px" src="${country.flags.svg}" alt="Flag of ${
+      return `<li style="list-style-type: none"><img style="margin-right: 5px" src="${
+        country.flags.svg
+      }" alt="Flag of ${country.name.official}" width="30" hight="20"><b>${
         country.name.official
-      }" width="30" hight="20"><b>${country.name.official}</b></p>
+      }</b></p>
             <p><b>Capital</b>: ${country.capital}</p>
             <p><b>Population</b>: ${country.population}</p>
             <p><b>Languages</b>: ${Object.values(country.languages)} </p>
