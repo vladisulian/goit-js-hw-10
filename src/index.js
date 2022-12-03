@@ -1,20 +1,61 @@
 import './css/styles.css';
+import { fetchCountries } from './fetchCountries';
+import debounce from 'lodash.debounce';
+import Notiflix from 'notiflix';
 
+const input = document.querySelector('#search-box');
+const countryList = document.querySelector('.country-list');
+const countryInfo = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 300;
 
-fetchCountries();
-function fetchCountries(name) {
-  return fetch('https://restcountries.com/v3.1/name/Ukraine')
-    .then(responce => {
-      // console.log(responce.json());
-      return responce.json();
+input.addEventListener(
+  'input',
+  debounce(e => {
+    const trimmedValue = input.value.trim();
+    cleanHtml();
+    if (trimmedValue !== '') {
+      fetchCountries(trimmedValue).then(foundData => {
+        if (foundData.length > 10) {
+          Notiflix.Notify.info(
+            'Too many matches found. Please enter a more specific name.'
+          );
+        } else if (foundData.length === 0) {
+          Notiflix.Notify.failure('Oops, there is no country with that name');
+        } else if (foundData.length >= 2 && foundData.length <= 10) {
+          renderCountryList(foundData);
+        } else if (foundData.length === 1) {
+          renderOneCountry(foundData);
+        }
+      });
+    }
+  }, DEBOUNCE_DELAY)
+);
+
+function renderCountryList(countries) {
+  const markup = countries
+    .map(country => {
+      return `<li><img style="margin-right: 5px" src="${country.flags.svg}" alt="Flag of ${country.name.official}" width="30" hight="20"><b>${country.name.official}</p></li>`;
     })
-    .then(data => {
-      console.log('All information:', data[0]);
-      console.log('Country named as', data[0].name.official);
-      console.log('The capital is', data[0].capital[0]);
-      console.log('Population is ', data[0].population, 'peoples');
-      console.log('Country language is', data[0].languages);
-      console.log('Country Flag is', data[0].flags.svg);
-    });
+    .join('');
+  countryList.innerHTML = markup;
+}
+
+function renderOneCountry(countries) {
+  const markup = countries
+    .map(country => {
+      return `<li style="list-style-type: none"><img style="margin-right: 5px" src="${country.flags.svg}" alt="Flag of ${
+        country.name.official
+      }" width="30" hight="20"><b>${country.name.official}</b></p>
+            <p><b>Capital</b>: ${country.capital}</p>
+            <p><b>Population</b>: ${country.population}</p>
+            <p><b>Languages</b>: ${Object.values(country.languages)} </p>
+                </li>`;
+    })
+    .join('');
+  countryList.innerHTML = markup;
+}
+
+function cleanHtml() {
+  countryList.innerHTML = '';
+  countryInfo.innerHTML = '';
 }
